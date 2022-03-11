@@ -1,14 +1,13 @@
-# use this by doing this in terminal:
-# make
-# make run (or make compile, make clean etc.)
-CPPflags = gcc  # -wall
-#LIB =  -larmadillo
-all: 
-	${CPPflags} -o main.exe main.c src/read_graph_from_file.c -Wall
 
+Cflags = gcc  # -wall
 
-run:
+all: main.exe
 	./main.exe
+
+
+main.exe:  main.c src/read_graph_from_file.c
+	#${CPPflags} -o main.exe main.c src/read_graph_from_file.c -Wall
+	${Cflags} -o $@ $^ -Wall
 
 clean:
 	rm -f *.exe *~

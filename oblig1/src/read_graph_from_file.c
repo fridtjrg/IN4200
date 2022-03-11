@@ -1,7 +1,6 @@
 
 #include "read_graph_from_file.h"
 
-;
 //void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val) why N?
 void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx_o, double **val){
 
@@ -19,6 +18,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     fscanf(datafile, "%*[^\n]\n");
     fscanf(datafile, "%*[^\n]\n");
     fscanf(datafile, "%*s %*s %d %*s %d\n",&nodes, &edges);//saves number of edges
+    *N = nodes;
     fscanf(datafile, "%*[^\n]");
 
     //creates the full matrix
