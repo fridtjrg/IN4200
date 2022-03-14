@@ -2,7 +2,7 @@
 #include "read_graph_from_file.h"
 
 //void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val) why N?
-void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx_o, double **val){
+void read_graph_from_file(char *filename, int *N, int *Links, int **row_ptr_o, int **col_idx_o, double **val){
 
 	FILE *datafile;
 	datafile = fopen(filename, "r");
@@ -19,6 +19,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     fscanf(datafile, "%*[^\n]\n");
     fscanf(datafile, "%*s %*s %d %*s %d\n",&nodes, &edges);//saves number of edges
     *N = nodes;
+    *Links = edges;
     fscanf(datafile, "%*[^\n]");
 
     //creates the full matrix
@@ -44,6 +45,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
 	}
     fclose(datafile);
     
+    
     //Prints A_temp matrix
     for(int i=0;i<=nodes-1;i++){
     	for(int j=0;j<=nodes-1;j++){
@@ -51,6 +53,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     }
     printf("\n");
     }
+    
 
     //Calculates comung and row vector
     int temp_c=0;
@@ -82,6 +85,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     	}  
     }
     free(A_datapoints_temp);
+
 
     /*
     printf("\n A: ");
