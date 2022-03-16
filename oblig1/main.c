@@ -33,8 +33,15 @@ void main(){
     printf("\n");
 
 	double d=0.85;
-	double epsilon,*scores; 
-	PageRank_iterations (N, row_ptr, col_idx,val,d,epsilon,scores);
+	double epsilon=0.0001;
+	double *scores = malloc(N*sizeof(double));
+
+	PageRank_iterations (N, row_ptr, col_idx, val,d,epsilon,scores);
+
+	printf("Final scores from main= ");
+	for(int i=0; i<=N-1;i++){
+            printf(" %f ",scores[i]);
+        }
 	
 
 }

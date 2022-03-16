@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
 
@@ -50,9 +51,11 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     float W = 1/N;
     if(num_W==0){W=0;}
 
+    double test_criterion= epsilon+1; 
     //using for to parallellize, use while when approacing limit?
-    int total_iterations = 100;
-    for(int iter=0;iter <=total_iterations;iter++){ //for each iteration
+
+
+    while(epsilon<=test_criterion){ //for each iteration
         
         double per_iter = ((1-d+d*W)/N); //needs only be calculated once per iteration
 
@@ -86,24 +89,32 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
             W+= x_new[Dangling_idx[i]];//sum scores of dangling webpages
         }
         
-
+        test_criterion = 0;
         
-        //updates old x to be new x
+        //updates old x to be new x and updates test criterion
         for(int i=0;i<=N-1;i++){
+            test_criterion += fabs(x_new[i]-x_old[i]);
             x_old[i] = x_new[i];
         }
 
+        /*
         //print x and iteration
-        printf("\n iteration %d x= ",iter);
+        printf("\n test_criterion = %f x= ", test_criterion);
         for(int i=0; i<=N-1;i++){
             printf(" %f ",x_new[i]);
         }
-        printf("\n");
+        */
+        
 
 
 
 
 }//end of iteration loop
 
+for(int i=0; i<=N-1;i++){
+            scores[i] = x_new[i];
+}
+
+printf("\n");
 }//end of function
 
