@@ -2,7 +2,7 @@
 #include "read_graph_from_file.h"
 
 //void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val) why N?
-void read_graph_from_file(char *filename, int *N, int *Links, int **row_ptr_o, int **col_idx_o, double **val){
+void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx_o, double **val){
 
 	FILE *datafile;
 	datafile = fopen(filename, "r");
@@ -19,7 +19,6 @@ void read_graph_from_file(char *filename, int *N, int *Links, int **row_ptr_o, i
     fscanf(datafile, "%*[^\n]\n");
     fscanf(datafile, "%*s %*s %d %*s %d\n",&nodes, &edges);//saves number of edges
     *N = nodes;
-    *Links = edges;
     fscanf(datafile, "%*[^\n]");
 
     //creates the full matrix
@@ -28,7 +27,8 @@ void read_graph_from_file(char *filename, int *N, int *Links, int **row_ptr_o, i
     //creates the wanted arrays
     double *A_datapoints_temp = malloc(edges*sizeof(double));
     int *col_idx = malloc(edges * sizeof(int));
-    int *row_ptr = malloc(nodes * sizeof(int));
+    int *row_ptr = malloc((nodes+1) * sizeof(int));
+    row_ptr[nodes]=edges;
 
     for(int i=0;i<=edges-1;i++){
         A_datapoints_temp[i] = 0;

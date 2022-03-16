@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void PageRank_iterations (int N, int Links, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
+void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
 
     //initial guess
     float *x_old = malloc(N * sizeof(float));
@@ -23,7 +23,7 @@ void PageRank_iterations (int N, int Links, int *row_ptr, int *col_idx, double *
     
     for(int i=0;i<=N-1;i++){W_webpages[i] = 0;}
 
-    for(int i=0;i<=Links-1;i++){W_webpages[col_idx[i]]= 1;}
+    for(int i=0;i<=row_ptr[N]-1;i++){W_webpages[col_idx[i]]= 1;}
 
     for(int i=0;i<=N-1;i++){
         if(W_webpages[i]==0){
@@ -73,7 +73,7 @@ void PageRank_iterations (int N, int Links, int *row_ptr, int *col_idx, double *
         
         //calculates last value of x array
         double temp=0;
-        for (int j=0; j<=Links-row_ptr[N-1];j++)
+        for (int j=0; j<=row_ptr[N]-row_ptr[N-1];j++)
             {
                 temp+=d*val[row_ptr[N-1]+j]*x_old[col_idx[row_ptr[N-1]+j]];
             }
