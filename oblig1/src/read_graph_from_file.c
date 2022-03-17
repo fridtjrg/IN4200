@@ -45,7 +45,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
 	}
     fclose(datafile);
     
-    
+    /*
     //Prints A_temp matrix
     for(int i=0;i<=nodes-1;i++){
     	for(int j=0;j<=nodes-1;j++){
@@ -53,6 +53,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     }
     printf("\n");
     }
+    */
     
 
     //Calculates comung and row vector
