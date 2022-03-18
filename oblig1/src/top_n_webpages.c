@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
 
 void top_n_webpages(int N, double *scores, int n){
 
@@ -20,25 +21,74 @@ void top_n_webpages(int N, double *scores, int n){
 	top_scores[0] = scores[top_scores_idx[0]];
 	scores[top_scores_idx[0]] = 0;
 
-	for(int idx=1; idx<=n-1; idx++){
-		double top_score = 0;
-		int top_score_idx;
-		
-		for(int i=0; i<=N; i++){
-			if(scores[i]>top_score){
+	int num_threads;
+	double *best_candidates;
+	int *best_candidates_idx;
 
-				top_score=scores[i];
-				top_score_idx= i;
-			}
+
+	#pragma omp parallel
+	{
+		#pragma omp single
+		{
+			num_threads = omp_get_num_threads();
+			printf("\nnum thread = %d",num_threads);
+			best_candidates = malloc(num_threads*sizeof(double));
+			best_candidates_idx = malloc(num_threads*sizeof(int));
 		}
 
-		scores[top_score_idx] = 0;		//zeros the value to avoid checking if value has already been zeroed
-		top_scores[idx]= top_score;
-		top_scores_idx[idx] = top_score_idx;
 
+		
+	}
+	
+		for(int idx=1; idx<=n-1; idx++){
+		#pragma omp parallel
+		{
+		int thread_id = omp_get_thread_num();
+			#pragma omp for
+			for(int i=0; i<=N; i++){
+				if(scores[i]>best_candidates[thread_id]){
+					best_candidates[thread_id]=scores[i];
+					best_candidates_idx[thread_id]= i;
+				}
+			}
+			//printf("\n thread: %d found %f",thread_id, best_candidates[thread_id]);
+
+			#pragma omp barrier
+			#pragma omp single
+			{
+				double best_score = best_candidates[0]; //why semicolon?
+				int best_score_idx = best_candidates_idx[0];
+
+				for(int i =1; i<=num_threads;i++){
+					if(best_candidates[i]>best_score){
+						best_score = best_candidates[i];
+						best_score_idx = best_candidates_idx[i];
+					}
+				}
+
+				//printf("\n best score was %f \n",best_score);
+				top_scores[idx] = best_score;
+				top_scores_idx[idx] = best_score_idx;
+				scores[best_score_idx]= 0; //zeros value so the value can not be picked again
+				/*
+				printf("\n current list");
+				for(int j=0;j<=N;j++){
+					printf(" %f ", scores[j]);
+				}
+				*/
+			}
+			//end of single region
+			//resets each threads best candidate
+			best_candidates[thread_id] = 0;
+
+
+		}
 	}
 
+	//end of for parallel region
+
 	//refills the zeroed values
+	#pragma omp parallel for
 	for(int i=0; i<=n-1;i++){
 		scores[top_scores_idx[i]] = top_scores[i];
 	}
