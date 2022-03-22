@@ -1,13 +1,12 @@
-
 #include "read_graph_from_file.h"
 
 //void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, double **val) why N?
 void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx_o, double **val){
 
-	FILE *datafile;
-	datafile = fopen(filename, "r");
-	int edges, nodes;
-	int fromnode, tonode;
+    FILE *datafile;
+    datafile = fopen(filename, "r");
+    int edges, nodes;
+    int fromnode, tonode;
 
     if (datafile == NULL) {
         printf("Could not open %s\n", filename);
@@ -35,21 +34,21 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     }
     //Reads all datalines based on number of edges
     //Creates A, col_idx and row_idx
-	for(int i=0;i<=edges-1;i++){  
+    for(int i=0;i<=edges-1;i++){  
         fscanf(datafile, "%d %d", &fromnode,&tonode);
 
 
-    	A_temp[fromnode+nodes*tonode] = 1;
-    	A_datapoints_temp[fromnode] += 1;
+        A_temp[fromnode+nodes*tonode] = 1;
+        A_datapoints_temp[fromnode] += 1;
 
-	}
+    }
     fclose(datafile);
     
     /*
     //Prints A_temp matrix
     for(int i=0;i<=nodes-1;i++){
-    	for(int j=0;j<=nodes-1;j++){
-    		printf(" %f ",A_temp[j+i*nodes]);
+        for(int j=0;j<=nodes-1;j++){
+            printf(" %f ",A_temp[j+i*nodes]);
     }
     printf("\n");
     }
@@ -61,29 +60,29 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     int temp_r=0;
     bool first_element;
     for(int i=0;i<=nodes-1;i++){
-    	first_element = true;
-    	
-    	for(int j=0;j<=nodes-1;j++){
-    		if(A_temp[j+i*nodes]!=0){
-    			col_idx[temp_c] = j;
+        first_element = true;
+        
+        for(int j=0;j<=nodes-1;j++){
+            if(A_temp[j+i*nodes]!=0){
+                col_idx[temp_c] = j;
 
-    			if(first_element==true)
-    			{
-    				row_ptr[temp_r] = temp_c;
-    				temp_r+=1;
-    				first_element = false;
-    			}
-    			temp_c += 1;
-    		}
+                if(first_element==true)
+                {
+                    row_ptr[temp_r] = temp_c;
+                    temp_r+=1;
+                    first_element = false;
+                }
+                temp_c += 1;
+            }
     }
     }
     free(A_temp);
 
     *val = malloc(edges*sizeof(double));
     for(int i=0;i<=edges-1;i++){
-    	{
-    		(*val)[i]= 1/A_datapoints_temp[col_idx[i]];
-    	}  
+        {
+            (*val)[i]= 1/A_datapoints_temp[col_idx[i]];
+        }  
     }
     free(A_datapoints_temp);
 
@@ -93,7 +92,6 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     for(int i=0;i<=edges-1;i++){
         printf(" %f ",A_datapoints[i]);
     }
-
     printf("\n col idx: ");
     for(int i=0;i<=edges-1;i++){
         printf(" %d ",col_idx[i]);
@@ -109,7 +107,3 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr_o, int **col_idx
     *row_ptr_o = row_ptr;
     *col_idx_o = col_idx;
 }
-
-
-
-

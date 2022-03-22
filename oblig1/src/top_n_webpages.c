@@ -26,7 +26,7 @@ void top_n_webpages(int N, double *scores, int n){
 	int *best_candidates_idx;
 
 
-	#pragma omp parallel
+	#pragma omp parallel //Only to create the thread_num dependent variables
 	{
 		#pragma omp single
 		{
@@ -53,29 +53,29 @@ void top_n_webpages(int N, double *scores, int n){
 			}
 			//printf("\n thread: %d found %f",thread_id, best_candidates[thread_id]);
 
-			#pragma omp barrier
-			#pragma omp single
+			#pragma omp barrier	//all threads must be done searching
+			#pragma omp single	//Threads cannot find new candidate before the best score is chosen
 			{
-				double best_score = best_candidates[0]; //why semicolon?
-				int best_score_idx = best_candidates_idx[0];
+			double best_score = best_candidates[0]; //why semicolon?
+			int best_score_idx = best_candidates_idx[0];
 
-				for(int i =1; i<=num_threads;i++){
-					if(best_candidates[i]>best_score){
-						best_score = best_candidates[i];
-						best_score_idx = best_candidates_idx[i];
-					}
+			for(int i =1; i<=num_threads;i++){
+				if(best_candidates[i]>best_score){
+					best_score = best_candidates[i];
+					best_score_idx = best_candidates_idx[i];
 				}
+			}
 
-				//printf("\n best score was %f \n",best_score);
-				top_scores[idx] = best_score;
-				top_scores_idx[idx] = best_score_idx;
-				scores[best_score_idx]= 0; //zeros value so the value can not be picked again
-				/*
-				printf("\n current list");
-				for(int j=0;j<=N;j++){
-					printf(" %f ", scores[j]);
-				}
-				*/
+			//printf("\n best score was %f \n",best_score);
+			top_scores[idx] = best_score;
+			top_scores_idx[idx] = best_score_idx;
+			scores[best_score_idx]= 0; //zeros value so the value can not be picked again
+			/*
+			printf("\n current list");
+			for(int j=0;j<=N;j++){
+				printf(" %f ", scores[j]);
+			}
+			*/
 			}
 			//end of single region
 			//resets each threads best candidate
