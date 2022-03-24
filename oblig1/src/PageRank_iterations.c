@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <omp.h>
 
 void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
 
@@ -25,6 +26,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     for(int i=0;i<=N-1;i++){W_webpages[i] = 0;}
 
     for(int i=0;i<=row_ptr[N]-1;i++){W_webpages[col_idx[i]]= 1;}
+
 
     for(int i=0;i<=N-1;i++){
         if(W_webpages[i]==0){
