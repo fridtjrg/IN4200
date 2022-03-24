@@ -19,7 +19,7 @@ void main(){
 
 
 	double d=1;
-	double epsilon=0.0001;
+	double epsilon=10e-7;
 	double *scores = malloc(N*sizeof(double));
 
 	PageRank_iterations (N, row_ptr, col_idx, val,d,epsilon,scores);

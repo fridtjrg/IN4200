@@ -4,7 +4,7 @@
 
 void top_n_webpages(int N, double *scores, int n){
 
-	double *top_scores = malloc(n*sizeof(int));
+	double *top_scores = malloc(n*sizeof(double));
 	int *top_scores_idx = malloc(n*sizeof(int));
 
 

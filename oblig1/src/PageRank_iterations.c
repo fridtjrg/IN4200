@@ -7,14 +7,15 @@
 void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double d, double epsilon, double *scores){
 
     //initial guess
-    float *x_old = malloc(N * sizeof(float));
-    float *x_new = malloc(N * sizeof(float));
+    double *x_old = malloc(N * sizeof(double));
+    double *x_new = malloc(N * sizeof(double));
 
 
     for(int i=0;i<N;i++){
-        x_old[i]=1;
+        x_old[i]=1./N;
         x_new[i]=0;
     }
+
 
 
 
@@ -50,7 +51,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     
 
     //Initial danglin webpage score
-    float W = 1/N;
+    double W = 1/N;
     if(num_W==0){W=0;}
 
     double test_criterion= epsilon+1; 
@@ -58,9 +59,9 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
 
     while(epsilon<=test_criterion){ //for each iteration
-        
+
         double per_iter = ((1-d+d*W)/N); //needs only be calculated once per iteration
-        printf("x[0]=%f\n",x_old);
+
         //CRS multiplication
         int n_multip;
         for (int i=0;i<=N-2; i++){
@@ -100,13 +101,6 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
 }//end of iteration loop
 
-printf("Score = \n");
-for(int i=0; i<=N-1;i++){
-            scores[i] = x_new[i];
-            printf("%f\n",x_new[i]);
-}
 
-
-printf("\n");
 }//end of function
 
