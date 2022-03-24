@@ -13,9 +13,7 @@ void main(){
 	int *col_idx; 
     int *row_ptr;
 
-	read_graph_from_file("datafiles/17nodes.txt", &N, &row_ptr, &col_idx, &val);
-	printf("\n \n*read_graph_from_file has run* \n\n");
-
+	read_graph_from_file("datafiles/17nodes.txt", &N, &row_ptr, &col_idx, &val); //Change filename to 100nodes.txt if needed
 
 
 	double d=1;
@@ -23,17 +21,11 @@ void main(){
 	double *scores = malloc(N*sizeof(double));
 
 	PageRank_iterations (N, row_ptr, col_idx, val,d,epsilon,scores);
-	printf("\n\n*PageRank_iterations has run*\n\n");
 
-	/*
-	printf("Final scores from main= ");
-	for(int i=0; i<=N-1;i++){
-            printf(" %f ",scores[i]);
-        }
-    */
+
+
 	
-    int n = 8;
+    int n = 3;	//The top scores to print
 	top_n_webpages(N, scores, n);
-	printf("\n\n*top_n_webpages has run*\n\n");
 
 }

@@ -117,6 +117,12 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
             test_criterion += fabs(x_new[i]-x_old[i]);
             x_old[i] = x_new[i];
         }
+        /* For testing
+        #pragma omp single
+        {
+            printf("x_0= %f\n",x_new[0]);
+        }
+        */
 
 }//end of iteration loop
 
