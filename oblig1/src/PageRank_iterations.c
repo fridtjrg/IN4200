@@ -101,6 +101,10 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
 }//end of iteration loop
 
+//filling in zeroed values
+for(int i=0; i<=N-1;i++){
+            scores[i] = x_new[i];
+}
 
 }//end of function
 
