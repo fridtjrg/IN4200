@@ -80,7 +80,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
                 storage_idx += 1;
             }
         }
-        (*row_ptr)[current_row_idx]=first_row_element;
+        (*row_ptr)[current_row_idx]=first_row_element; //add test to check if firstrowelement <nodes?
         current_row_idx += 1;
 
         //The column indeces are sorted in ascending order and placed into col_idx array
