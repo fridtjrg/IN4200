@@ -91,6 +91,10 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
             (*row_ptr)[current_row_idx]=first_row_element; 
             current_row_idx += 1;
         }
+        else{//signifies a row with no values
+            (*row_ptr)[current_row_idx]=-1; 
+            current_row_idx += 1;
+        }
 
         //The column indeces are sorted in ascending order and placed into col_idx array
         qsort(temp_storage, storage_idx, sizeof(int), cmpfunc);

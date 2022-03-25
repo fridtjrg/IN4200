@@ -77,10 +77,24 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
         #pragma omp for
         for (int i=0;i<=N-2; i++){
-            int n_multip = row_ptr[i+1]- row_ptr[i]-1; //nr multiplications in row
-            scores[i] = 0;
-            for (int j=0; j<=n_multip;j++){
-                scores[i]+=val[row_ptr[i]+j]*x_old[col_idx[row_ptr[i]+j]];
+            if(row_ptr[i]>=0){
+
+                int next_idx;
+                for(int k=i; k<=N-2;k++){//finds index of next row which is not empty
+                    if(row_ptr[k+1]!=-1){
+                        next_idx = k+1;
+                        break;
+                    }
+
+                }
+                int n_multip = row_ptr[next_idx]- row_ptr[i]-1; //nr multiplications in row
+                scores[i] = 0;
+                for (int j=0; j<=n_multip;j++){
+                    scores[i]+=val[row_ptr[i]+j]*x_old[col_idx[row_ptr[i]+j]];
+                }
+            }
+            if(row_ptr[i]==-1){
+                scores[i]=0;
             }
 
             scores[i] = per_iter+ d*scores[i];
@@ -118,6 +132,11 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
 
         test_criterion = 0;
+        
+        #pragma omp single
+        {
+            printf("x_0 = %f\n",x_old[0]);
+        }
         
         //updates old x to be new x and updates test criterion
         #pragma omp for reduction(+:test_criterion)
