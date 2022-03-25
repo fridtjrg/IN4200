@@ -61,12 +61,14 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     int storage_idx;
     int *temp_storage;
     int first_row_element; 
+    int first_row_element_col_idx;
     
     for(int j=0; j<nodes; j++){
 
         storage_idx = 0;
         //NB: set to nodes so that every value will be smaller. If a row has no values, it will get nodes
-        first_row_element = nodes; 
+        first_row_element = 0; 
+        first_row_element_col_idx = nodes;
         temp_storage = malloc(values_in_row[j] * sizeof(int));
         
         //For each row the col_idx and row ptr is saved.
@@ -74,14 +76,21 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
             if(tonode_array[i]==j){
                 temp_storage[storage_idx] = fromnode_array[i];
 
-                if (fromnode_array[i]<first_row_element){
+                if (fromnode_array[i]<first_row_element_col_idx){
+                    first_row_element_col_idx = fromnode_array[i];
                     first_row_element = current_col_idx; 
                 }
                 storage_idx += 1;
             }
         }
-        (*row_ptr)[current_row_idx]=first_row_element; //add test to check if firstrowelement <nodes?
-        current_row_idx += 1;
+
+        //printf("J= %d\n",j);
+        //printf("Checking if %d < %d\n",first_row_element_col_idx,nodes);
+        if(first_row_element_col_idx<nodes){//Row element added only if row actually has value
+            //printf("Since %d < %d row_ptr[%d]= %d\n",first_row_element_col_idx,nodes,current_row_idx,first_row_element);
+            (*row_ptr)[current_row_idx]=first_row_element; 
+            current_row_idx += 1;
+        }
 
         //The column indeces are sorted in ascending order and placed into col_idx array
         qsort(temp_storage, storage_idx, sizeof(int), cmpfunc);

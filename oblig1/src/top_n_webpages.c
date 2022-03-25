@@ -70,12 +70,12 @@ void top_n_webpages(int N, double *scores, int n){
 			top_scores[idx] = best_score;
 			top_scores_idx[idx] = best_score_idx;
 			scores[best_score_idx]= 0; //zeros value so the value can not be picked again
-			/*
+			
 			printf("\n current list");
 			for(int j=0;j<=N;j++){
 				printf(" %f ", scores[j]);
 			}
-			*/
+			
 			}
 			//end of single region
 			//resets each threads best candidate

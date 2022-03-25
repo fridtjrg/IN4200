@@ -10,7 +10,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     double *x_old = malloc(N * sizeof(double));
     int num_W = 0; //number of dangling webpages
     int *W_webpages = malloc(N * sizeof(int));
-    int *Dangling_idx= malloc(num_W* sizeof(int));
+    int *Dangling_idx;
 
     #pragma omp parallel
     {
@@ -29,37 +29,39 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     {
     for(int i=0;i<=row_ptr[N]-1;i++){W_webpages[col_idx[i]]= 1;}
     }//implicit barrier
+    
 
     #pragma omp for reduction(+:num_W)
-    for(int i=0;i<=N-1;i++){
+    for(int i=0;i<N;i++){
         if(W_webpages[i]==0){
             W_webpages[num_W]=i;   //saves index of dangling page in existing array
             num_W += 1;
         }}
 
 
-    #pragma omp barrier
+    #pragma omp single
+    {
+        Dangling_idx= malloc(num_W* sizeof(int));
+    }
 
     //saves the index of danling webpages in array
     #pragma omp for
-    for(int i=0;i<=num_W-1;i++){
+    for(int i=0;i<num_W;i++){
         Dangling_idx[i] = W_webpages[i];
-        //printf("\n i=%d index_saved: %d ",i, W_webpages[i]);
     }
     
     
     }//end of parallel region
 
-
     free(W_webpages); 
     if(num_W==0){free(Dangling_idx);} //if there are no danling webpages
 
-    
 
     //Initial dangling webpage score
-    double W = 1/N;
+    double W = 1./N;
     if(num_W==0){W=0;}
-
+    
+    printf("\nW = %d\n",num_W);
     //guarantes the while loop starts
     double test_criterion= epsilon+1.; 
     double temp;
@@ -101,12 +103,20 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
         scores[N-1] = per_iter+d*temp;   
 
         //sum scores of dandling webpages
-        W=0;
+        #pragma omp single
+        {
+            W=0.;
+        }
+
+
+
         #pragma omp for reduction(+:W)
-        for(int i=0;i<num_W-1;i++){
+        for(int i=0;i<num_W;i++){
             W+= scores[Dangling_idx[i]];//sum scores of dangling webpages
         }
-        
+
+
+
         test_criterion = 0;
         
         //updates old x to be new x and updates test criterion
@@ -115,12 +125,10 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
             test_criterion += fabs(scores[i]-x_old[i]);
             x_old[i] = scores[i];
         }
-        /* For testing
-        #pragma omp single
-        {
-            printf("x_0= %f\n",scores[0]);
-        }
-        */
+
+        
+        
+        
 
 }//end of iteration loop
 
@@ -130,7 +138,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
 
 
 //only for testing purposes
-printf("Score = \n");
+printf("\nScore = \n");
 for(int i=0; i<=N-1;i++){
             printf("%f\n",scores[i]);
 }

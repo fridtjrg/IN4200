@@ -15,6 +15,12 @@ void main(){
 
 	read_graph_from_file("datafiles/17nodes.txt", &N, &row_ptr, &col_idx, &val); //Change filename to 100nodes.txt if needed
 
+    printf("\nCol_idx: ");
+    for(int i=0;i<=row_ptr[N]-1;i++){printf(" %d ",col_idx[i]);}
+
+	printf("\nRow_ptr ");
+    for(int i=0;i<=N;i++){printf(" %d ",row_ptr[i]);}
+
 
 	double d=1;
 	double epsilon=10e-7;
