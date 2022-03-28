@@ -9,6 +9,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     //initial guess
     double *x_old = malloc(N * sizeof(double));
     int num_W = 0; //number of dangling webpages
+    double W=0;
     int *W_webpages = malloc(N * sizeof(int));
     int *Dangling_idx;
 
@@ -31,23 +32,27 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     }//implicit barrier
     
 
-    #pragma omp for reduction(+:num_W)
+    #pragma omp single
+    {
     for(int i=0;i<N;i++){
         if(W_webpages[i]==0){
             W_webpages[num_W]=i;   //saves index of dangling page in existing array
+            printf("\nWebpages[%d]= %d\n",num_W,i);
             num_W += 1;
         }}
 
+    Dangling_idx= malloc(num_W* sizeof(int));
+    }//implicit barrier
 
-    #pragma omp single
-    {
-        Dangling_idx= malloc(num_W* sizeof(int));
-    }
+
+    //Initial dangling webpage score
+    #pragma omp barrier
 
     //saves the index of danling webpages in array
-    #pragma omp for
+    #pragma omp for reduction(+:W)
     for(int i=0;i<num_W;i++){
         Dangling_idx[i] = W_webpages[i];
+        W += 1./N;
     }
     
     
@@ -57,9 +62,7 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     if(num_W==0){free(Dangling_idx);} //if there are no danling webpages
 
 
-    //Initial dangling webpage score
-    double W = 1./N;
-    if(num_W==0){W=0;}
+
     
     printf("\nW = %d\n",num_W);
     //guarantes the while loop starts
@@ -67,11 +70,16 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
     double temp;
 
 
+
     #pragma omp parallel
     {
     while(epsilon<=test_criterion){ //for each iteration
-        double per_iter = ((1-d+d*W)/N); //needs only be calculated once per iteration
+        double per_iter = ((1.-d+d*W)/N); //needs only be calculated once per iteration
 
+        #pragma omp single
+        {
+        printf("W= %f\n",W);
+        }
         //CRS multiplication
         
 
@@ -87,9 +95,9 @@ void PageRank_iterations (int N, int *row_ptr, int *col_idx, double *val, double
                     }
 
                 }
-                int n_multip = row_ptr[next_idx]- row_ptr[i]-1; //nr multiplications in row
+                int n_multip = row_ptr[next_idx]- row_ptr[i]; //nr multiplications in row
                 scores[i] = 0;
-                for (int j=0; j<=n_multip;j++){
+                for (int j=0; j<n_multip;j++){
                     scores[i]+=val[row_ptr[i]+j]*x_old[col_idx[row_ptr[i]+j]];
                 }
             }
