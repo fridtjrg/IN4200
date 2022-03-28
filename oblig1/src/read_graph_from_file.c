@@ -1,4 +1,4 @@
-#include "read_graph_from_file.h"
+#include "PageRank.h"
 
 //Sorting function
 int cmpfunc (const void * a, const void * b){
@@ -10,7 +10,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
 
     FILE *datafile;
     datafile = fopen(filename, "r");
-    int edges, nodes;
+    int edges, nodes;   //"Edges" is the number of links
     int fromnode, tonode;
 
     if (datafile == NULL) {
@@ -21,7 +21,7 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     //Skips first 4 lines
     fscanf(datafile, "%*[^\n]\n");
     fscanf(datafile, "%*[^\n]\n");
-    fscanf(datafile, "%*s %*s %d %*s %d\n",&nodes, &edges);//saves number of edges
+    fscanf(datafile, "%*s %*s %d %*s %d\n",&nodes, &edges);//saves number of nodes and edges
     *N = nodes;
     fscanf(datafile, "%*[^\n]");
 
@@ -63,19 +63,21 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
     int first_row_element; 
     int first_row_element_col_idx;
     
+    //Calculates row ptr and col_idx
     for(int j=0; j<nodes; j++){
 
         storage_idx = 0;
-        //NB: set to nodes so that every value will be smaller. If a row has no values, it will get nodes
         first_row_element = 0; 
         first_row_element_col_idx = nodes;
         temp_storage = malloc(values_in_row[j] * sizeof(int));
         
         //For each row the col_idx and row ptr is saved.
         for(int i =0; i<edges; i++){
+            //if the tonode id is equal to what is being searched for, corresponding fromnode is saved in temporary array.
             if(tonode_array[i]==j){
                 temp_storage[storage_idx] = fromnode_array[i];
 
+                //If the column index is also the smallest in the current row
                 if (fromnode_array[i]<first_row_element_col_idx){
                     first_row_element_col_idx = fromnode_array[i];
                     first_row_element = current_col_idx; 
@@ -84,14 +86,13 @@ void read_graph_from_file(char *filename, int *N, int **row_ptr, int **col_idx, 
             }
         }
 
-        //printf("J= %d\n",j);
-        //printf("Checking if %d < %d\n",first_row_element_col_idx,nodes);
-        if(first_row_element_col_idx<nodes){//Row element added only if row actually has value
-            //printf("Since %d < %d row_ptr[%d]= %d\n",first_row_element_col_idx,nodes,current_row_idx,first_row_element);
+        //Row element added only if row actually has value
+        if(first_row_element_col_idx<nodes){
             (*row_ptr)[current_row_idx]=first_row_element; 
             current_row_idx += 1;
         }
-        else{//signifies a row with no values
+        //If the row did not contain any values the row_ptr gets value -1 to signify an empty row.
+        else{
             (*row_ptr)[current_row_idx]=-1; 
             current_row_idx += 1;
         }
