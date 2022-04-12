@@ -1,4 +1,14 @@
 /* needed header files .... */
+
+struct image {
+float** image_data; /* a 2D array of floats */
+int m; /* # pixels in vertical-direction */
+int n; /* # pixels in horizontal-direction */
+};
+
+import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
+export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
+
 /* declarations of functions import_JPEG_file and export_JPEG_file */
 int main(int argc, char *argv[])
 {
