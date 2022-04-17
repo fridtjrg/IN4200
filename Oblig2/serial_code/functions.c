@@ -2,11 +2,11 @@
 #include <stdlib.h>
 
 
-struct image {
+typedef struct{
 float** image_data; /* a 2D array of floats */
 int m; /* # pixels in vertical-direction */
 int n; /* # pixels in horizontal-direction */
-};
+}image;
 
 
 //Does it have to be a 2D array or can i just use..
@@ -16,25 +16,20 @@ int n; /* # pixels in horizontal-direction */
 //void allocate_image(image *u, int m, int n)
 void allocate_image(*u, int m, int n){
 
-	int* arr[m];
+	u.image_data[m];
     for (int i = 0; i < m; i++)
-        arr[i] = (int*)malloc(n * sizeof(int));
+        u.image_data[i] = (int*)malloc(n * sizeof(int));
  
 
     int count = 0;
     for (int i = 0; i < m; i++)
         for (int j = 0; j < n; j++)
-            arr[i][j] = ++count;
+            u.image_data[i][j] = ++count;
  
     for (int i = 0; i < m; i++)
         for (int j = 0; j < n; j++)
-            printf("%d ", arr[i][j]);
+            printf("%d ", u.image_data[i][j]);
 
-    //to free the memory
-   /*
-    for (int i = 0; i < m; i++)
-        free(arr[i]);
-    */
  
     return 0;
 }
@@ -42,9 +37,53 @@ void allocate_image(*u, int m, int n){
 //How am i suppose to allocate 2D without m?
 
 //void deallocate_image(image *u)
-void deallocate_image(*u, int m){
-	for (int i = 0; i < m; i++)
-        free(u[i]);
+void deallocate_image(*u){
+	for (int i = 0; i < u.m; i++)
+        free(u.image_data[i]);
 
     //if 1D just free(u)
 }
+
+void convert_jpeg_to_image(const unsigned char* image_chars, image *u){
+//convert a 1D array of unsigned char values into an image struct
+
+//NB: Assuming 1st element is top left and reading row-wise
+    for (int i = 0; i < u.m; i++){
+        for(int j=0; j < u.n; j++)
+            u.image_data[i][j] = atof(image_chars[i*u.m+j]);
+    }
+
+}
+
+void convert_image_to_jpeg(const image *u, unsigned char* image_chars){
+    for(int i = 0; i < u.m; i++){
+        for(int j=0; j < u.n; j++){
+            gcvt(u.image_data[i][j], 6, image_chars[i*u.m+j]);//copies and transforms to char
+        }
+    }	
+}
+
+void iso_diffusion_denoising(image *u, image *u_bar, float kappa, int iters){
+
+    for(int iter=0; iter<iters; iter++){
+
+        //does not include the outer bounds
+        for(int i = 1; i < u.m-1; i++){
+            for(int j=1; j < u.n-1; j++){
+                u_bar.image_data[i][j] = u.image_data[i][j] + kappa*(u.image_data[i-1][j] + u.image_data[i][j-1]-4*u.image_data[i][j] +u.image_data[i+1][j]+u.image_data[i][j+1]);
+            }
+        }
+
+        //Swaps pointers only if it is not the last iteration
+        if(iter!=iters-1){
+            image temp = *u;
+            *u = *u_bar;
+            *u_bar = *u;
+        }
+
+    }//end of iteration loop
+
+
+}
+
+
