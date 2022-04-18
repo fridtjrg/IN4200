@@ -1,13 +1,17 @@
+CC = gcc
+CFLAGS = -O2
+LDFLAGS = -L./simple-jpeg/ -lsimplejpeg
 
-Cflags = gcc  # -wall
+PROJ = serial_main
+OBJS = serial_main.o
 
 all: main_serial.exe
 	./main_serial.exe
 
 
-main_serial.exe:  serial_code/serial_main.c src/simple-jpeg/import_export_jpeg.c
+main_serial.exe:  serial_code/serial_main.c serial_code/functions.c 
 	#${CPPflags} -o main.exe main.c src/read_graph_from_file.c -Wall
-	${Cflags} -o $@ $^ -fopenmp -Wall -g
+	${CC} -o $@  $^ ${LDFLAGS} -Wall -g
 
 clean:
 	rm -f *.exe *~
