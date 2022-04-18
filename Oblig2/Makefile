@@ -14,6 +14,7 @@ serial: main_serial.exe
 
 main_serial.exe:  serial_code/serial_main.c serial_code/functions.c 
 	#${CPPflags} -o main.exe main.c src/read_graph_from_file.c -Wall
+	cd simple-jpeg && make
 	${CC} -o $@  $^ ${LDFLAGS} -Wall -g
 
 clean:
