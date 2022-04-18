@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
 	char *input_jpeg_filename, *output_jpeg_filename;
 
 
-	MPI_Init (&argc, &argv);
-	MPI_Comm_rank (MPI_COMM_WORLD, &my_rank);
-	MPI_Comm_size (MPI_COMM_WORLD, &num_procs);
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
 	/* read from command line: kappa, iters, input_jpeg_filename, output_jpeg_file
 	name */
