@@ -51,19 +51,19 @@ int main(int argc, char *argv[])
 
 
 
-	int *process_chunk_sizes = malloc(num_procs*sizeof(*process_chunk_sizes));
+	int *process_process_chunk_sizes = malloc(num_procs*sizeof(*process_process_chunk_sizes));
 
 	unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 
-	MPI_Gather(&process_chunk_size, 1, MPI_INT, &chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	int *displ = malloc(num_procs*sizeof(*displ));
     for(int proc = 0; proc < num_procs; proc++){
-        displ[proc] = proc*chunk_sizes[proc];
+        displ[proc] = proc*process_chunk_sizes[proc];
     }
 
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
-	MPI_Scatterv(image_chars, process_chunk_sizes, displ, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(image_chars, process_process_chunk_sizes, displ, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 
 
