@@ -88,9 +88,9 @@ int main(int argc, char *argv[])
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	int *image_chunks = malloc(num_procs*sizeof(*int));
+	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, average_chunksize, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, process_chunk_sizes, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 
 
