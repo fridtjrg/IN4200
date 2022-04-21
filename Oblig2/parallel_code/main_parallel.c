@@ -75,14 +75,15 @@ int main(int argc, char *argv[])
 	/* of image_chars and copy the values into u */
 	/* ... */
 
-	convert_jpeg_to_image (my_image_chars, &u);
+	convert_jpeg_to_image(my_image_chars, &u);
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
 
 	/* each process sends its resulting content of u_bar to process 0 */
 	/* process 0 receives from each process incoming values and */
 	/* copy them into the designated region of struct whole_image */
 	/* ... */
-	convert_image_to_jpeg(my_image_chars, &u);
+
+	convert_image_to_jpeg (&u, my_image_chars);
 
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
