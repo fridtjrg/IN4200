@@ -1,6 +1,10 @@
 #include "main_parallel.h"
 #include <mpi.h>
 
+void import_JPEG_file (const char* filename, unsigned char** image_chars,int* image_height,int* image_width,int* num_components);
+void export_JPEG_file (const char* filename, const unsigned char* image_chars,int image_height, int image_width,int num_components, int quality);
+
+
 /* declarations of functions import_JPEG_file and export_JPEG_file */
 int main(int argc, char *argv[])
 {
@@ -8,7 +12,7 @@ int main(int argc, char *argv[])
 	int my_m, my_n, my_rank, num_procs;
 	float kappa;
 	image u, u_bar, whole_image;
-	unsigned char *image_chars, *my_image_chars;
+	unsigned char *image_chars;
 	char *input_jpeg_filename, *output_jpeg_filename;
 
 
@@ -47,7 +51,7 @@ int main(int argc, char *argv[])
 
 	unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(unsigned char));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
-	MPI_Scatterv(image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(image_chars, (int*)process_chunk_size, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 
 
