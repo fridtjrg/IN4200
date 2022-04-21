@@ -1,6 +1,7 @@
 //Parallel functions
 #include <stdio.h>
 #include <stdlib.h>
+#include <mpi.h>
 
 
 typedef struct{
@@ -79,8 +80,8 @@ void iso_diffusion_denoising(image *u, image *u_bar, float kappa, int iters){
 
 void iso_diffusion_denoising_parallel(image *u, image *u_bar, float kappa, int iters, int my_rank, int num_procs){
     //ghost points
-    float* top_ghostpoints = malloc(u->n*sizeof(*float));
-    float* bottom_ghostpoints = malloc(u->n*sizeof(*float));
+    float* top_ghostpoints = malloc(u->n*sizeof(float));
+    float* bottom_ghostpoints = malloc(u->n*sizeof(float));
 
 
     for(int iter=0; iter<iters; iter++){
