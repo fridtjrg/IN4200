@@ -11,14 +11,21 @@ all: main_parallel.exe
 serial: main_serial.exe
 	./main_serial.exe
 
+parallel: main_parallel.exe
+	./main_parallel.exe
+
 
 main_serial.exe:  serial_code/serial_main.c serial_code/functions.c 
-	#${CPPflags} -o main.exe main.c src/read_graph_from_file.c -Wall
+	cd simple-jpeg && make
+	${CC} -o $@  $^ ${LDFLAGS} -Wall -g
+
+main_parallel.exe:  parallel_code/main_parallel.c parallel_code/functions.c 
 	cd simple-jpeg && make
 	${CC} -o $@  $^ ${LDFLAGS} -Wall -g
 
 clean:
-	rm -f *.exe *~
+	rm -f *.exe *~ 
+	cd datafiles && rm -f *processed*
 
 
 

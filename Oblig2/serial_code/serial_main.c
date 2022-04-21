@@ -12,7 +12,8 @@ void export_JPEG_file (const char* filename, const unsigned char* image_chars,in
 
 int main(int argc, char *argv[])
 {
-	int m, n, c, iters;
+	int m, n, iters;
+	int c = 1;
 	float kappa;
 	image u, u_bar;
 	unsigned char *image_chars;
