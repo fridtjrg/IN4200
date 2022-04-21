@@ -1,4 +1,5 @@
 CC = gcc
+PCC = mpicc
 CFLAGS = -O2
 LDFLAGS = -L./simple-jpeg/ -lsimplejpeg
 
@@ -21,7 +22,7 @@ main_serial.exe:  serial_code/serial_main.c serial_code/functions.c
 
 main_parallel.exe:  parallel_code/main_parallel.c parallel_code/functions.c 
 	cd simple-jpeg && make
-	${CC} -o $@  $^ ${LDFLAGS} -Wall -g
+	${PCC} -o $@  $^ ${LDFLAGS} -Wall -g
 
 clean:
 	rm -f *.exe *~ 
