@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 	unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 
 	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
+	printf("first gather done!\n");
 
 	int *displ = malloc(num_procs*sizeof(*displ));
     for(int proc = 0; proc < num_procs; proc++){
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
 
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
 	MPI_Scatterv(image_chars, process_chunk_sizes, displ, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
-
+	printf("Scatter done!\n");
 
 
     allocate_image(&u, my_m, my_n);
@@ -91,8 +92,9 @@ int main(int argc, char *argv[])
 	/* ... */
 
 	convert_jpeg_to_image(my_image_chars, &u);
+	printf("convert jpeg to image done!\n");
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
-
+	printf("iso diffution done!\n");
 	/* each process sends its resulting content of u_bar to process 0 */
 	/* process 0 receives from each process incoming values and */
 	/* copy them into the designated region of struct whole_image */
@@ -109,6 +111,7 @@ int main(int argc, char *argv[])
 
 
 	if (my_rank==0) {
+		printf("Last gather done\n");
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
 		deallocate_image (&whole_image);
