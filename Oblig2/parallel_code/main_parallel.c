@@ -1,4 +1,5 @@
 #include "main_parallel.h"
+#include <mpi.h>
 
 /* declarations of functions import_JPEG_file and export_JPEG_file */
 int main(int argc, char *argv[])
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
 	MPI_Bcast (&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	/* 2D decomposition of the m x n pixels evenly among the MPI processes */
-	int average_chunksize = (*int)floor(m/num_procs);
+	int average_chunksize = floor(m/num_procs);
 	int chunksize_rest = m % num_procs;
 	int process_boundary[2];
 
