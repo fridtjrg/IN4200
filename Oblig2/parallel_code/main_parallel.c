@@ -15,6 +15,21 @@ int main(int argc, char *argv[])
 	unsigned char *image_chars;
 	char *input_jpeg_filename, *output_jpeg_filename;
 
+	if(argc ==5){
+		kappa = atof(argv[1]);
+		iters=atof(argv[2]);
+		input_jpeg_filename= argv[3];
+		output_jpeg_filename = argv[4];
+	}
+	else{
+		printf("Arguments were not provided correctly,\n");
+		printf("using default values!\n");
+
+		kappa = 0.1; //0.2 or lower
+		iters= 100; //Many?
+		input_jpeg_filename= "datafiles/mona_lisa_noisy.jpg";
+		output_jpeg_filename = "datafiles/mona_lisa_parallel_processed.jpg";
+	}
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);

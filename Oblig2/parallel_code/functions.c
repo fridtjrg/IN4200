@@ -124,7 +124,7 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, float kappa, int i
         if(my_rank !=0 && my_rank != num_procs-1){
             for(int i=1;i< u->n-1;i++){
                 //Top ghost points
-                u_bar->image_data[0][i] = u->image_data[0][i] + kappa*(u->image_data[1][i] + u->image_data[0][i-1]-4*u->image_data[0][i] +u->top_ghostpoints[i]+u->image_data[0][i+1]);
+                u_bar->image_data[0][i] = u->image_data[0][i] + kappa*(u->image_data[1][i] + u->image_data[0][i-1]-4*u->image_data[0][i] +top_ghostpoints[i]+u->image_data[0][i+1]);
 
                 //Bottom ghost points
                 u_bar->image_data[u->m-1][i] = u->image_data[u->m-1][i] + kappa*(bottom_ghostpoints[i] + u->image_data[u->m-1][i-1]-4*u->image_data[u->m-1][i]+ u->image_data[u->m-2][i] +u->image_data[u->m-1][i+1]);
@@ -144,7 +144,7 @@ void iso_diffusion_denoising_parallel(image *u, image *u_bar, float kappa, int i
         //has only top ghost points
         if(my_rank==num_procs-1){
             for(int i=1;i< u->n-1;i++){
-            u_bar->image_data[0][i] = u->image_data[0][i] + kappa*(u->image_data[1][i] + u->image_data[0][i-1]-4*u->image_data[0][i] +u->top_ghostpoints[i]+u->image_data[0][i+1]);
+            u_bar->image_data[0][i] = u->image_data[0][i] + kappa*(u->image_data[1][i] + u->image_data[0][i-1]-4*u->image_data[0][i] +top_ghostpoints[i]+u->image_data[0][i+1]);
             }
 
         }
