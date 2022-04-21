@@ -49,9 +49,11 @@ int main(int argc, char *argv[])
 	my_n = n;
 	int process_chunk_size = my_m*my_n;
 
+	int *process_chunk_sizes = malloc(num_procs*sizeof(*int));
+
 	unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(unsigned char));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
-	MPI_Scatterv(image_chars, (int*)process_chunk_size, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(image_chars, process_chunk_sizes, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 
 
