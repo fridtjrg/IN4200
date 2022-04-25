@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 		printf("Printing whole image:\n");
 	    for(int i = 0; i < m; i++){
         	for(int j=0; j < n; j++){
-            	printf(" %d ",whole_image->image_data[i][j]);
+            	printf(" %d ",whole_image.image_data[i][j]);
 	        }
 	        printf("\n");
 	    }	
