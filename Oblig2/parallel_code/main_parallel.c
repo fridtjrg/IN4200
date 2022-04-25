@@ -88,24 +88,18 @@ int main(int argc, char *argv[])
     allocate_image(&u_bar, my_m, my_n);
 
 
-	/* each process asks process 0 for a partitioned region */
-	/* of image_chars and copy the values into u */
-	/* ... */
 
 	convert_jpeg_to_image(my_image_chars, &u);
 	printf("convert jpeg to image done!\n");
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
 	printf("iso diffution done!\n");
-	/* each process sends its resulting content of u_bar to process 0 */
-	/* process 0 receives from each process incoming values and */
-	/* copy them into the designated region of struct whole_image */
-	/* ... */
+
 
 
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	int *image_chunks = malloc(num_procs*sizeof(int));
+	int *image_chunks = malloc(process_chunk_size*sizeof(int));
 
 	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, process_chunk_sizes, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
@@ -122,9 +116,6 @@ int main(int argc, char *argv[])
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
 		deallocate_image (&whole_image);
-		//convert_image_to_jpeg(&whole_image, image_chars);
-		//export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
-		//deallocate_image (&whole_image);
 	}
 
 	
