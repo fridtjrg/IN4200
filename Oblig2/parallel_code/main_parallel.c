@@ -73,14 +73,14 @@ int main(int argc, char *argv[])
 	printf("first gather done!\n");
 
 	//Contains the first index of each chunk's postiion in image_chars array
-	int *displ = malloc(num_procs*sizeof(*displ));
+	int *chunk_idx = malloc(num_procs*sizeof(*chunk_idx));
     for(int proc = 0; proc < num_procs; proc++){
-        displ[proc] = proc*process_chunk_sizes[proc];
+        chunk_idx[proc] = proc*process_chunk_sizes[proc];
     }
 
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
-	MPI_Scatterv(image_chars, process_chunk_sizes, displ, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 	printf("Scatter done!\n");
 
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, displ, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, chunk_idx, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
@@ -109,10 +109,10 @@ int main(int argc, char *argv[])
 
 
 	if (my_rank==0) {
-		printf("Printing imagechars:\n");
-	    for(int i = 0; i < m*n; i++){
+		//printf("Printing imagechars:\n");
+	    //for(int i = 0; i < m*n; i++){
             	printf("Index = %d, data= %d \n",i,image_chars[i]);
-	    }	
+	    //}	
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
 		deallocate_image (&whole_image);
