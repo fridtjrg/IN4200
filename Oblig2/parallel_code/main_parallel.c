@@ -127,11 +127,9 @@ int main(int argc, char *argv[])
 		//deallocate_image (&whole_image);
 	}
 
-	//cannot deallocate before image is saved
-	MPI_Barrier(MPI_COMM_WORLD);
 	
-	deallocate_image (&u);
-	deallocate_image (&u_bar);
+	deallocate_image(&u);
+	deallocate_image(&u_bar);
     free(image_chunks);
     free(my_image_chars);
 	MPI_Finalize ();
