@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
-	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(image_chars, process_chunk_sizes, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 	printf("Scatter done!\n");
 
 
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, chunk_idx, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
