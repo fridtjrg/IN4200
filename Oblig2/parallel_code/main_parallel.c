@@ -65,14 +65,14 @@ int main(int argc, char *argv[])
 	int process_chunk_size = my_m*my_n;
 
 
-
+	//Contains the chunk size of each process
 	int *process_chunk_sizes = malloc(num_procs*sizeof(*process_chunk_sizes));
-
-	
-
 	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+
 	printf("first gather done!\n");
 
+	//Contains the first index of each chunk's postiion in image_chars array
 	int *displ = malloc(num_procs*sizeof(*displ));
     for(int proc = 0; proc < num_procs; proc++){
         displ[proc] = proc*process_chunk_sizes[proc];
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, process_chunk_sizes, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
