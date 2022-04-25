@@ -109,6 +109,7 @@ int main(int argc, char *argv[])
 
 	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, process_chunk_sizes, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
+	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
 
 
@@ -125,6 +126,10 @@ int main(int argc, char *argv[])
 		//export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
 		//deallocate_image (&whole_image);
 	}
+
+	//cannot deallocate before image is saved
+	MPI_Barrier(MPI_COMM_WORLD);
+	
 	deallocate_image (&u);
 	deallocate_image (&u_bar);
     free(image_chunks);
