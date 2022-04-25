@@ -112,12 +112,9 @@ int main(int argc, char *argv[])
 
 
 	if (my_rank==0) {
-		printf("Printing whole image:\n");
-	    for(int i = 0; i < m; i++){
-        	for(int j=0; j < n; j++){
-            	printf(" %f ",whole_image.image_data[i][j]);
-	        }
-	        printf("\n");
+		printf("Printing imagechars:\n");
+	    for(int i = 0; i < m*n; i++){
+            	printf(" %f ",image_chars[i]);
 	    }	
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
