@@ -109,6 +109,8 @@ int main(int argc, char *argv[])
 
 	MPI_Gatherv(my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, image_chars, image_chunks, process_chunk_sizes, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 
+	MPI_Barrier(MPI_COMM_WORLD);
+
 
 
 	if (my_rank==0) {
