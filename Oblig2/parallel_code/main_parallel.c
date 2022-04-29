@@ -77,15 +77,18 @@ int main(int argc, char *argv[])
         chunk_idx[proc] = proc*process_chunk_sizes[proc];
     }
 
+
+    allocate_image(&u, my_m, my_n);
+    allocate_image(&u_bar, my_m, my_n);
+    printf("image allocation complete!");
+    
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
 	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
 	printf("Scatter done!\n");
 
 
-    allocate_image(&u, my_m, my_n);
-    allocate_image(&u_bar, my_m, my_n);
-    printf("image allocation complete!");
+
 
 
 	convert_jpeg_to_image(my_image_chars, &u);
@@ -122,7 +125,7 @@ int main(int argc, char *argv[])
 	deallocate_image(&u);
 	deallocate_image(&u_bar);
     //free(image_chunks);
-    free(my_image_chars);
+    //free(my_image_chars);
 	MPI_Finalize ();
 	return 0;
 }
