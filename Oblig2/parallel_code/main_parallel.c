@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 	}
 
 	
-	//deallocate_image(&u);
+	deallocate_image(&u);
 	deallocate_image(&u_bar);
     free(my_image_chars);
 
