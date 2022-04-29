@@ -39,7 +39,7 @@ word "processed".
 
 The makefile should compile the library in __simple-jpeg/__ automatically.
 If you do not see the __simple-jpeg/import_export_jpeg.o__ file after using the makefile, enter the folder
-and use ```$make ``` there. 
+and use ```$make ``` there. When compiling the parallel program, make sure you have a suitable compiler for <mpi.h>.
 
 
 
