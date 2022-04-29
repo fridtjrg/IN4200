@@ -98,8 +98,6 @@ int main(int argc, char *argv[])
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
 
 
-
-
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -118,7 +116,6 @@ int main(int argc, char *argv[])
 	}
 
 	if(my_rank!=0){deallocate_image(&u);}
-	//deallocate_image(&u);
 	deallocate_image(&u_bar);
     free(my_image_chars);
 
