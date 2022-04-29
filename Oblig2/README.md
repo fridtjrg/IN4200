@@ -51,11 +51,11 @@ main_serial.exe	kappa iters input_jpeg_filename	output_jpeg_filename
 Where **kappa** is as small constant(typically below 0.2) and **iters** are the number of iterations done by the ISO diffusion denoising, both effect the resulting image. 
 **input_jpeg_filename** is the name og the file to read and **output_jpeg_filename** is the name of the output file. One example of running can then be:
 ```
-$ main_serial.exe 0.1 100 datafiles/mona_lisa_noisy.jpg datafiles/mona_lisa_serial_processed.jpg
+$ ./main_serial.exe 0.1 100 datafiles/mona_lisa_noisy.jpg datafiles/mona_lisa_serial_processed.jpg
 ```
 or
 ```
-$ main_parallel.exe 0.1 1000 datafiles/mona_lisa_noisy.jpg datafiles/mona_lisa_parallel_processed.jpg
+$ ./main_parallel.exe 0.1 1000 datafiles/mona_lisa_noisy.jpg datafiles/mona_lisa_parallel_processed.jpg
 ```
 
 Note that if the program does not recive the correct number of arguments, it will run with it's default values which are:<br/>
