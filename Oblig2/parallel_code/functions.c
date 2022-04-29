@@ -20,7 +20,7 @@ void allocate_image(image *u, int m, int n){
     
     u->m = m; u->n =n;
 
-	u->image_data = (float**)malloc(m*n*sizeof(float*)); //was originally just m
+	u->image_data = (float**)malloc(m*sizeof(float*)); //was originally just m
     for (int i = 0; i < m; i++)
         u->image_data[i] = (float*)malloc(n * sizeof(float));
 }
