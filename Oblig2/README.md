@@ -1,8 +1,8 @@
 # Project 2
 
 ## Description
-This folder contains all files relevant for project 2 in *IN4200*. Below you can find instructions for compiling and running the program,
-as well as the content description. The prorgam is working as it should from what i can tell, and i get the same results as what has been provided.
+This folder contains all files relevant for project 2 about Image Denoising in *IN4200*. Below you can find instructions for compiling and running the program,
+as well as the content description. Both programs are working well, and i have not experienced any more bugs.
 The project can be found on github: https://github.com/fridtjrg/IN4200/edit/main/Oblig2/.
 
 ## Content
