@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	int *image_chunks = malloc(num_procs*sizeof(int));
+	//int *image_chunks = malloc(num_procs*sizeof(int));
 
 	//no longer using my_rows
 	MPI_Gather(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, m*n, MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -109,14 +109,15 @@ int main(int argc, char *argv[])
 	if (my_rank==0) {
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
-		deallocate_image (&whole_image);
 		printf("Image created!");
+		deallocate_image (&whole_image);
+		
 	}
 
 	
 	deallocate_image(&u);
 	deallocate_image(&u_bar);
-    free(image_chunks);
+    //free(image_chunks);
     free(my_image_chars);
 	MPI_Finalize ();
 	return 0;
