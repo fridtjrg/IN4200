@@ -5,7 +5,7 @@ void import_JPEG_file (const char* filename, unsigned char** image_chars,int* im
 void export_JPEG_file (const char* filename, const unsigned char* image_chars,int image_height, int image_width,int num_components, int quality);
 
 
-/* declarations of functions import_JPEG_file and export_JPEG_file */
+
 int main(int argc, char *argv[])
 {
 	int m, n, c, iters;
@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	unsigned char *image_chars;
 	char *input_jpeg_filename, *output_jpeg_filename;
 
+	//uses default values if no arguments are provided
 	if(argc ==5){
 		kappa = atof(argv[1]);
 		iters=atof(argv[2]);
@@ -35,33 +36,36 @@ int main(int argc, char *argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-	/* read from command line: kappa, iters, input_jpeg_filename, output_jpeg_file
-	name */
-	/* ... */
-
+	//Process 0 creates creates image_chars and allocates whole image
 	if (my_rank==0) {
 		import_JPEG_file(input_jpeg_filename, &image_chars, &m, &n, &c);
 		allocate_image (&whole_image, m, n);
 	}
 
+	//m and n are broadcasted to all processes
 	MPI_Bcast (&m, 1, MPI_INT, 0, MPI_COMM_WORLD);
 	MPI_Bcast (&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-	/* 2D decomposition of the m x n pixels evenly among the MPI processes */
-	int average_chunksize = floor(m/num_procs);
-	//int chunksize_rest = m % num_procs;
-	int process_boundary[2];
+	/* 
+	--2D decomposition of the m x n pixels--
+	Each process handles a vertical fraction of the image.(A certain number of rows)
+	Numer of rows per process is simply the number of rows divided by the 
+	number of processed and rounded down. If the number of rows can not
+	be divided by the number of processes the last process will calculate
+	the remaining rows.
+	*/
 
-	process_boundary[0] = my_rank * average_chunksize;
-	process_boundary[1] = (my_rank+1)* average_chunksize;
+	int average_chunksize = floor(m/num_procs);
+
+
+	my_m = (my_rank+1)*average_chunksize - my_rank*average_chunksize;
+	my_n = n;
 
 	//Last process implicitly will complete the "rest"
 	if(my_rank == num_procs-1){
-		process_boundary[1] = m;
+		my_m = process_boundary[1] = m - my_rank*average_chunksize;
 	}
-
-	my_m = process_boundary[1]- process_boundary[0];
-	my_n = n;
+	
 	int process_chunk_size = my_m*my_n;
 
 
