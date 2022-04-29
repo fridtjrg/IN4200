@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
 
 	//image_data[m][n]
 	//gives same adress(troubleshooting)
+	/*
 	for(int i=0; i<m;i++){
 		for(int j=0;j<n;j++){
 			printf("First= %p, second=%p\n ",u.image_data[i]+j,&u.image_data[i][j]);
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("m= %d, n= %d",m,n); //m is larger
-	
+	*/
 
 	convert_image_to_jpeg (&u_bar, image_chars);
 
