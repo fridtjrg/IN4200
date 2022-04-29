@@ -81,10 +81,11 @@ int main(int argc, char *argv[])
     allocate_image(&u, my_m, my_n);
     allocate_image(&u_bar, my_m, my_n);
     printf("image allocation complete!");
-    
+
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
 	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Barrier(MPI_COMM_WORLD);
 	printf("Scatter done!\n");
 
 
