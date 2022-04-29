@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 	int *process_row_skips = malloc(num_procs*sizeof(*process_row_skips));
 	MPI_Gather(&my_row_skip, 1, MPI_INT, &process_row_skips[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-	printf("first gather done!\n");
+
 
 	//Contains the index of each chunks first element in image_chars array
 	int *chunk_idx = malloc(num_procs*sizeof(*chunk_idx));
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
 	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
-	printf("Scatter done!\n");
+
 
 
     allocate_image(&u, my_m, my_n);
@@ -103,7 +103,6 @@ int main(int argc, char *argv[])
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	int *image_chunks = malloc(num_procs*sizeof(int));
 	int total_datapoints = m*n;
 	//no longer using gatherv or index skip
 	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, &total_datapoints,process_row_skips, MPI_FLOAT, 0, MPI_COMM_WORLD);
@@ -122,8 +121,9 @@ int main(int argc, char *argv[])
 	
 	deallocate_image(&u);
 	deallocate_image(&u_bar);
-    free(image_chunks);
     free(my_image_chars);
+
+    MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize ();
 	return 0;
 }
