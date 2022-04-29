@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
 	//no longer using my_rows
 	MPI_Gather(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, m*n, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
+	printf("Gather complete!");
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
 
