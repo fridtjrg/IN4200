@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
 	if(my_rank==0){
 		printf("rank 0 u: \n");
-		for(int i=0; i<process_chunk_size;i++){
+		for(int i=0; i<5;i++){
 			printf(" %f ",u.image_data[i]);
 
 		}
