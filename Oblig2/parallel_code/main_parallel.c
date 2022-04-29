@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
 	//no longer using my_rows
-	MPI_Gather(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, image_chunks, MPI_FLOAT, 0, MPI_COMM_WORLD);
+	MPI_Gather(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, (int*)image_chunks, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
