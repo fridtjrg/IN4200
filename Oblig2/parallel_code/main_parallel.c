@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 	int *process_chunk_sizes = malloc(num_procs*sizeof(*process_chunk_sizes));
 	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+
 	printf("first gather done!\n");
 
 	//Contains the index of each chunks first element in image_chars array
@@ -77,36 +78,31 @@ int main(int argc, char *argv[])
         chunk_idx[proc] = proc*process_chunk_sizes[proc];
     }
 
-
-    allocate_image(&u, my_m, my_n);
-    allocate_image(&u_bar, my_m, my_n);
-    printf("image allocation complete!");
-
     unsigned char *my_image_chars = malloc(process_chunk_size*sizeof(my_image_chars));
 	//MPI(Send data, How many to send of type, type, Recive databuffer, count, type, root, communicator)
 	MPI_Scatterv(image_chars, process_chunk_sizes, chunk_idx, MPI_UNSIGNED_CHAR, my_image_chars, process_chunk_size, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
-	MPI_Barrier(MPI_COMM_WORLD);
 	printf("Scatter done!\n");
 
 
+    allocate_image(&u, my_m, my_n);
+    allocate_image(&u_bar, my_m, my_n);
 
 
 
 	convert_jpeg_to_image(my_image_chars, &u);
 
-	printf("ISO started!");
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
-	printf("ISO complete!");
+
+
+
 
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	//int *image_chunks = malloc(num_procs*sizeof(int));
+	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	//no longer using my_rows
-	MPI_Gather(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, m*n, MPI_FLOAT, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, image_chunks, chunk_idx, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
-	printf("Gather complete!");
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
 
@@ -115,18 +111,14 @@ int main(int argc, char *argv[])
 	if (my_rank==0) {
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
-		printf("Image created!");
 		deallocate_image (&whole_image);
-		
 	}
-
-	MPI_Barrier(MPI_COMM_WORLD);
 
 	
 	deallocate_image(&u);
 	deallocate_image(&u_bar);
-    //free(image_chunks);
-    //free(my_image_chars);
+    free(image_chunks);
+    free(my_image_chars);
 	MPI_Finalize ();
 	return 0;
 }
