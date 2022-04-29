@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
 	//Last process implicitly will complete the "rest"
 	if(my_rank == num_procs-1){
-		my_m = process_boundary[1] = m - my_rank*average_chunksize;
+		my_m = m - my_rank*average_chunksize;
 	}
 	
 	int process_chunk_size = my_m*my_n;
