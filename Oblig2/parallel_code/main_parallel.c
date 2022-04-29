@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 	convert_jpeg_to_image(my_image_chars, &u);
 
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
-
+	printf("ISO complete!");
 
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
