@@ -103,7 +103,6 @@ int main(int argc, char *argv[])
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
-	int total_datapoints = m*n;
 	//no longer using gatherv or index skip
 	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, &total_datapoints,process_row_skips, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
@@ -115,13 +114,13 @@ int main(int argc, char *argv[])
 	if (my_rank==0) {
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
-		deallocate_image (&whole_image);
+		//deallocate_image (&whole_image);
 	}
 
 	
-	deallocate_image(&u);
-	deallocate_image(&u_bar);
-    free(my_image_chars);
+	//deallocate_image(&u);
+	//deallocate_image(&u_bar);
+    //free(my_image_chars);
 
     MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize ();
