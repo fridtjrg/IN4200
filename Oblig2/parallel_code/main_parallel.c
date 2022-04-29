@@ -69,11 +69,6 @@ int main(int argc, char *argv[])
 	int *process_chunk_sizes = malloc(num_procs*sizeof(*process_chunk_sizes));
 	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-	int my_rows= average_chunksize*my_rank;
-	int *process_rows = malloc(num_procs*sizeof(*process_rows));
-	MPI_Gather(&my_rows, 1, MPI_INT, &process_rows[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-
 	printf("first gather done!\n");
 
 	//Contains the index of each chunks first element in image_chars array
