@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
 		printf("Arguments were not provided correctly,\n");
 		printf("using default values!\n");
 
-		kappa = 0.1; //0.2 or lower
-		iters= 100; //Many?
+		kappa = 0.1; 
+		iters= 1000; 
 		input_jpeg_filename= "datafiles/mona_lisa_noisy.jpg";
 		output_jpeg_filename = "datafiles/mona_lisa_parallel_processed.jpg";
 	}
