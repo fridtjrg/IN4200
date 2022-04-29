@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
 	//all processes must be done before collecting results
 	MPI_Barrier(MPI_COMM_WORLD);
 
+	int total_datapoints = m*n;
 	//no longer using gatherv or index skip
 	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, &total_datapoints,process_row_skips, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
