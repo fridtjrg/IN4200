@@ -110,6 +110,7 @@ int main(int argc, char *argv[])
 		convert_image_to_jpeg(&whole_image, image_chars);
 		export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
 		deallocate_image (&whole_image);
+		printf("Image created!");
 	}
 
 	
