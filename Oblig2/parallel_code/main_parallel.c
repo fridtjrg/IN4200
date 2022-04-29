@@ -93,7 +93,13 @@ int main(int argc, char *argv[])
 
 	iso_diffusion_denoising_parallel(&u, &u_bar, kappa, iters, my_rank, num_procs);
 
+	if(my_rank==0){
+		printf("rank 0 u: \n")
+		for(int i=0; i<process_chunk_size;i++){
+			printf(" %f ",&(u.image_data[i]))
 
+		}
+	}
 
 
 	//all processes must be done before collecting results
