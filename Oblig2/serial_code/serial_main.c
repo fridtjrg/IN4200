@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 		printf("using default values!\n");
 
 		kappa = 0.1; //0.2 or lower
-		iters= 100; //Many?
+		iters= 10; //Many?
 		input_jpeg_filename= "datafiles/mona_lisa_noisy.jpg";
 		output_jpeg_filename = "datafiles/mona_lisa_serial_processed.jpg";
 	}
@@ -51,6 +51,17 @@ int main(int argc, char *argv[])
 
 	iso_diffusion_denoising (&u, &u_bar, kappa, iters);
 
+	//image_data[m][n]
+	//gives same adress(troubleshooting)
+	for(int i=0; i<10;i++){
+		for(int j=0;j<10;j++){
+			printf("First= %p, second=%p\n ",u.image_data[i]+j,&u.image_data[i][j]);
+		}
+	}
+
+	printf("m= %d, n= %d",m,n); //m is larger
+	
+
 	convert_image_to_jpeg (&u_bar, image_chars);
 
 	export_JPEG_file(output_jpeg_filename, image_chars, m, n, c, 75);
@@ -58,4 +69,4 @@ int main(int argc, char *argv[])
 	deallocate_image (&u);
 	deallocate_image (&u_bar);
 	return 0;
-}
+}//0x55cc5b5bb5a8
