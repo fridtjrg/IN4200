@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     allocate_image(&u, my_m, my_n);
     allocate_image(&u_bar, my_m, my_n);
-
+    printf("image allocation complete!");
 
 
 	convert_jpeg_to_image(my_image_chars, &u);
