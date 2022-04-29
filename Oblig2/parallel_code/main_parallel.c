@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 	
 	//deallocate_image(&u);
 	//deallocate_image(&u_bar);
-    //free(my_image_chars);
+    free(my_image_chars);
 
     MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize ();
