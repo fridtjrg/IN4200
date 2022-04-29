@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data[0], image_chunks, chunk_idx, MPI_FLOAT, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, image_chunks, average_chunksize, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
