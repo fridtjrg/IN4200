@@ -31,13 +31,13 @@ To compile both the serial and parallel program simply use:
 $ make
 ```
 To only compile one of them use ```$ make serial``` or ```$ make parallel```. The makefile has all paths included,
-so make sure you're located in the same folder as the makefilewhen using it.
+so make sure you're located in the same folder as the make file when using it.
 You can also run the program with it's default values using ```$ make run-serial``` or ```$ make run-parallel```. 
 Note that you can also use ```$ make clean``` to remove the compiled programs that end with ".exe".
 Using clean will also remove all images stored in the **datafiles** folder that contain the
 word "processed". 
 
-The makefile should compile the library in simple-jpeg/ automatically.
+The makefile should compile the library in __simple-jpeg/__ automatically.
 If you do not see the __simple-jpeg/import_export_jpeg.o__ file after using the makefile, enter the folder
 and use ```$make ``` there. 
 
