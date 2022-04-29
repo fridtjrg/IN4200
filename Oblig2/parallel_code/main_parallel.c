@@ -69,6 +69,10 @@ int main(int argc, char *argv[])
 	int *process_chunk_sizes = malloc(num_procs*sizeof(*process_chunk_sizes));
 	MPI_Gather(&process_chunk_size, 1, MPI_INT, &process_chunk_sizes[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
 
+	my_rows= my_m*my_rank
+	int *process_rows = malloc(num_procs*sizeof(*process_rows));
+	MPI_Gather(&my_rows, 1, MPI_INT, &process_rows[my_rank], 1, MPI_INT, 0, MPI_COMM_WORLD);
+
 
 	printf("first gather done!\n");
 
@@ -107,7 +111,7 @@ int main(int argc, char *argv[])
 
 	int *image_chunks = malloc(num_procs*sizeof(int));
 
-	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, image_chunks, average_chunksize, MPI_FLOAT, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(u.image_data, process_chunk_size, MPI_FLOAT, whole_image.image_data, image_chunks, my_rows, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 	//Process one must have obtained the entire image_chars array
 	MPI_Barrier(MPI_COMM_WORLD);
