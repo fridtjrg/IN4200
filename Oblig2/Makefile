@@ -6,13 +6,16 @@ LDFLAGS = -L./simple-jpeg/ -lsimplejpeg
 PROJ = serial_main
 OBJS = serial_main.o
 
-all: main_parallel.exe
-	./main_parallel.exe
+all: main_serial.exe main_parallel.exe
 
 serial: main_serial.exe
-	./main_serial.exe
 
 parallel: main_parallel.exe
+
+run-serial: main_serial.exe
+	./main_serial.exe
+
+run-parallel: main_parallel.exe
 	./main_parallel.exe
 
 
